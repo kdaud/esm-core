@@ -38,4 +38,12 @@ test('Login as Admin user', async ({ page }) => {
     await expect(page.getByText(/outpatient clinic/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /logout/i })).toBeVisible();
   });
+
+  await test.step('And click on `Logout` button', async () => {
+    await page.getByRole('button', { name: /logout/i }).click();
+    await expect(page).toHaveURL(`${process.env.E2E_BASE_URL}/spa/login`);
+    await expect(page.getByTitle('close notification')).not.toBeVisible();
+    await expect(page.getByText('Language ID should be string or object.')).not.toBeVisible();
+    await expect(page.getByText('Cannot read properties of undefined (reading `person`)')).toBeVisible();
+  });
 });
