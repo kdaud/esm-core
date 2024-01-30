@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../core';
 import { HomePage } from '../pages';
-import { generateRandomPatient, deletePatient, Patient } from '../commands';
+import { generateRandomPatient, deletePatient, type Patient } from '../commands';
 
 let patient: Patient;
 
@@ -73,6 +73,20 @@ test('Search patient by full name', async ({ page, api }) => {
     await expect(homePage.page).toHaveURL(
       `${process.env.E2E_BASE_URL}/spa/patient/${patient.uuid}/chart/Patient Summary`,
     );
+  });
+});
+
+test('User should return to home page from the patient chart', async ({ api, page }) => {
+  await test.step('When a user goes to patient chart using the url', async () => {
+    await page.goto(`${process.env.E2E_BASE_URL}/spa/patient/${patient.uuid}/chart/Patient Summary`);
+  });
+
+  await test.step('And clicks on `Close` button', async () => {
+    await page.getByRole('button', { name: 'Close' }).click();
+  });
+
+  await test.step('Then should be able to wind up back to home page from the patient chart', async () => {
+    await expect(page).toHaveURL(`${process.env.E2E_BASE_URL}/spa/home`);
   });
 });
 
